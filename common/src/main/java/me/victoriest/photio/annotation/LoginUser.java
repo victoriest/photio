@@ -7,6 +7,8 @@ import java.lang.annotation.Target;
 
 /**
  * 登录用户信息
+ * Created by VictoriEST on 2018/3/28.
+ * spring-cloud-step-by-step
  */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
