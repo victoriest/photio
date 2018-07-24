@@ -6,9 +6,12 @@ import me.victoriest.photio.cache.serializer.HessianRedisSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisPassword;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -167,9 +170,14 @@ public class RedisConfig {
         j.setHostName(host);
         j.setDatabase(database);
         j.setPassword(password);
-        j.setPort(port);
         j.setTimeout(timeout);
-        return j;
+//        return j;
+
+        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(host, port);
+        redisStandaloneConfiguration.setPassword(RedisPassword.of(password));
+        redisStandaloneConfiguration.setDatabase(database);
+        return new JedisConnectionFactory(redisStandaloneConfiguration);
+
     }
 
 ////

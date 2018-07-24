@@ -12,7 +12,7 @@ import java.util.List;
  * spring-boot-server
  */
 @Configuration
-@ConfigurationProperties(prefix = "spring.redis.cluster")
+@ConfigurationProperties(prefix = "spring.redis.cluster", ignoreUnknownFields = false)
 public class RedisClusterConfigurationProperties {
     /*
      * spring.redis.cluster.nodes[0] = 127.0.0.1:7379

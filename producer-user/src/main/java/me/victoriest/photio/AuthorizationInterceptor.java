@@ -1,10 +1,9 @@
-package me.victoriest.springcloud;
+package me.victoriest.photio;
 
 import io.jsonwebtoken.Claims;
-import me.victoriest.JwtHelper;
-import me.victoriest.annotation.IgnoreAuthorize;
-import me.victoriest.exception.BusinessLogicException;
-import me.victoriest.message.Messages;
+import me.victoriest.photio.annotation.IgnoreAuthorize;
+import me.victoriest.photio.exception.BusinessLogicException;
+import me.victoriest.photio.message.Messages;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

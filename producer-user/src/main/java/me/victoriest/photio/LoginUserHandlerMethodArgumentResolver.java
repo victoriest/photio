@@ -1,8 +1,8 @@
-package me.victoriest.springcloud;
+package me.victoriest.photio;
 
-import me.victoriest.annotation.LoginUser;
-import me.victoriest.dao.mapper.source.UserMapper;
-import me.victoriest.model.entity.User;
+import me.victoriest.photio.annotation.LoginUser;
+import me.victoriest.photio.dao.mapper.source.UserMapper;
+import me.victoriest.photio.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -14,6 +14,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 /**
  * 有@LoginUser注解的方法参数，注入当前登录用户
+ * @author VictoriEST
  */
 @Component
 public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
@@ -36,7 +37,7 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
         User user;
 
         if (object != null) {
-            user = userMapper.selectByPrimaryKey((Integer) object);
+            user = userMapper.selectByPrimaryKey((Long) object);
             return user;
         }
 

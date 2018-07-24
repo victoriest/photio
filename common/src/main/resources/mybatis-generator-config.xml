@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <!-- 配置文件，放在resource目录下即可 -->
+    <properties resource="application.yml"/>
+
+    <context id="MysqlTables" targetRuntime="MyBatis3">
+        <property name="autoDelimitKeywords" value="true"/>
+
+        <!--可以使用``包括字段名，避免字段名与sql保留字冲突报错-->
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
+        <plugin type="me.victoriest.photio.mybatis.plugin.OverIsMergeablePlugin"/>
+
+        <commentGenerator>
+            <property name="suppressDate" value="true"/>
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+        <!--数据库链接地址账号密码-->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL=""
+                        userId=""
+                        password="">
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!--生成Model类存放位置-->
+        <javaModelGenerator targetPackage="me.victoriest.photio.model.entity" targetProject="common/src/main/java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!--生成映射文件存放位置-->
+        <sqlMapGenerator targetPackage="mapper/source" targetProject="common/src/main/resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <!--生成Dao类存放位置-->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="me.victoriest.photio.dao.mapper.source"
+                             targetProject="common/src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <!-- 生成对应表及类名 -->
+        <table tableName="user" domainObjectName="User"
+               enableCountByExample="false"
+               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false">
+            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true" type="post"/>
+            <columnOverride column="state" javaType="java.lang.Integer"/>
+            <columnOverride column="type" javaType="java.lang.Integer"/>
+        </table>
+
+    </context>
+</generatorConfiguration>

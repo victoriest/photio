@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @Configuration
 @EnableTransactionManagement
-@MapperScan("me.victoriest.photio.mapper.source")
+@MapperScan("me.victoriest.photio.dao.mapper")
 public class MybatisConfig {
 
     @Value("${mybatis.mapper-locations}")
@@ -45,7 +45,6 @@ public class MybatisConfig {
         //添加XML目录
         ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         try {
-            System.out.println("\n\n\n\n\n\n"+mapperLocations);
             bean.setMapperLocations(resolver.getResources(mapperLocations));
             return bean.getObject();
         } catch (Exception e) {

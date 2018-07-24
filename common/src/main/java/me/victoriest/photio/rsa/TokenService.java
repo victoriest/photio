@@ -26,7 +26,6 @@ public class TokenService {
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
-
     /**
      * JWT方式生成token
      * @param account
@@ -48,7 +47,6 @@ public class TokenService {
                 .signWith(SignatureAlgorithm.HS256,
                         "secret").compact();
         return accessToken;
-
     }
 
     /**
@@ -113,7 +111,7 @@ public class TokenService {
      * @param userId 用户id(主键)
      * @return
      */
-    public Optional<String> getUserLastLoginToken(Integer userId) {
+    public Optional<String> getUserLastLoginToken(Long userId) {
         return Optional.ofNullable((String) redisTemplate.opsForValue().get(userId.toString()));
     }
 
@@ -123,7 +121,7 @@ public class TokenService {
      *
      * @param userId 用户id(主键)
      */
-    public void removeUserLastLoginToken(Integer userId) {
+    public void removeUserLastLoginToken(Long userId) {
         Optional<String> userLastLoginToken = getUserLastLoginToken(userId);
 
         if (userLastLoginToken.isPresent()) {

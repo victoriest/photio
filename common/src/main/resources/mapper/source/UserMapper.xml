@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.victoriest.photio.dao.mapper.source.UserMapper">
+  <resultMap id="BaseResultMap" type="me.victoriest.photio.model.entity.User">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="pwd" jdbcType="VARCHAR" property="pwd" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="type" jdbcType="TINYINT" property="type" />
+    <result column="state" jdbcType="TINYINT" property="state" />
+    <result column="score" jdbcType="BIGINT" property="score" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="creator_id" jdbcType="TIMESTAMP" property="creatorId" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="updater_id" jdbcType="TIMESTAMP" property="updaterId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, account, phone, pwd, user_name, `type`, `state`, score, create_date, creator_id, 
+    update_date, updater_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from user
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="me.victoriest.photio.model.entity.User">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into user (account, phone, pwd, 
+      user_name, `type`, `state`, 
+      score, create_date, creator_id, 
+      update_date, updater_id)
+    values (#{account,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, 
+      #{userName,jdbcType=VARCHAR}, #{type,jdbcType=TINYINT}, #{state,jdbcType=TINYINT}, 
+      #{score,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{creatorId,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP}, #{updaterId,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="me.victoriest.photio.model.entity.User">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="account != null">
+        account,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="pwd != null">
+        pwd,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="type != null">
+        `type`,
+      </if>
+      <if test="state != null">
+        `state`,
+      </if>
+      <if test="score != null">
+        score,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="creatorId != null">
+        creator_id,
+      </if>
+      <if test="updateDate != null">
+        update_date,
+      </if>
+      <if test="updaterId != null">
+        updater_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="account != null">
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null">
+        #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=TINYINT},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=TINYINT},
+      </if>
+      <if test="score != null">
+        #{score,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null">
+        #{creatorId,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updaterId != null">
+        #{updaterId,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="me.victoriest.photio.model.entity.User">
+    update user
+    <set>
+      <if test="account != null">
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null">
+        pwd = #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        `type` = #{type,jdbcType=TINYINT},
+      </if>
+      <if test="state != null">
+        `state` = #{state,jdbcType=TINYINT},
+      </if>
+      <if test="score != null">
+        score = #{score,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null">
+        creator_id = #{creatorId,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updaterId != null">
+        updater_id = #{updaterId,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="me.victoriest.photio.model.entity.User">
+    update user
+    set account = #{account,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      pwd = #{pwd,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=TINYINT},
+      `state` = #{state,jdbcType=TINYINT},
+      score = #{score,jdbcType=BIGINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      creator_id = #{creatorId,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      updater_id = #{updaterId,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
