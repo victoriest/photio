@@ -24,7 +24,7 @@
 
         <!--数据库链接地址账号密码-->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL=""
+                        connectionURL="jdbc:mysql://ip:port/photio?useUnicode=true&amp;characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull"
                         userId=""
                         password="">
         </jdbcConnection>
@@ -55,7 +55,7 @@
                enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
-            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true" type="post"/>
+            <!--<generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true" type="post"/>-->
             <columnOverride column="state" javaType="java.lang.Integer"/>
             <columnOverride column="type" javaType="java.lang.Integer"/>
         </table>
