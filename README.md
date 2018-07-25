@@ -87,4 +87,10 @@ token:
   unit-test-token-value: 1
   rsa-encrypt-enabled: true
 
+photio:
+  snow-flake:
+    original-timestamp: 1480166465631L
+    data-center-id: 1
+    machine-id: 1
+
 ```
