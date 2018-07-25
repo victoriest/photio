@@ -11,7 +11,7 @@
   <select id="selectByAccount"
           resultMap="me.victoriest.photio.dao.mapper.source.UserMapper.BaseResultMap">
     select
-    <include refid="Base_Column_List" />
+    <include refid="me.victoriest.photio.dao.mapper.source.UserMapper.Base_Column_List" />
     from user
     where account = #{account,jdbcType=VARCHAR}
   </select>

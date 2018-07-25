@@ -32,7 +32,8 @@ public class AppConfig extends WebMvcConfigurationSupport {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(authorizationInterceptor).addPathPatterns("/**");
+        registry.addInterceptor(authorizationInterceptor)
+                .addPathPatterns("/v1/api/**");
     }
 
     @Bean

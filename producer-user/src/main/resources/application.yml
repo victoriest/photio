@@ -8,4 +8,4 @@ spring:
     name: producer-user
 
 token:
-  enable: false
+  enable: true

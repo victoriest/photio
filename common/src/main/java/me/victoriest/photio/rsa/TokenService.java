@@ -75,7 +75,6 @@ public class TokenService {
         map.put("expireTime", String.valueOf(expireTime.getTime()));
 
         // 将token信息写入到redis
-        // redisTemplate.opsForValue().set(key, map, timeOutSeconds, TimeUnit.SECONDS);
         redisTemplate.opsForValue().set(key, map);
 
         // 将account对应的token保存起来，实现唯一设备登录功能
@@ -90,6 +89,10 @@ public class TokenService {
         }
 
         return map;
+    }
+
+    private void writeTokenIntoCache() {
+
     }
 
 
