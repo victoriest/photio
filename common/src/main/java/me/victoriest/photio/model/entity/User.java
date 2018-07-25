@@ -22,11 +22,11 @@ public class User implements Serializable {
 
     private Date createDate;
 
-    private Date creatorId;
+    private Long creatorId;
 
     private Date updateDate;
 
-    private Date updaterId;
+    private Long updaterId;
 
     private static final long serialVersionUID = 1L;
 
@@ -102,11 +102,11 @@ public class User implements Serializable {
         this.createDate = createDate;
     }
 
-    public Date getCreatorId() {
+    public Long getCreatorId() {
         return creatorId;
     }
 
-    public void setCreatorId(Date creatorId) {
+    public void setCreatorId(Long creatorId) {
         this.creatorId = creatorId;
     }
 
@@ -118,11 +118,11 @@ public class User implements Serializable {
         this.updateDate = updateDate;
     }
 
-    public Date getUpdaterId() {
+    public Long getUpdaterId() {
         return updaterId;
     }
 
-    public void setUpdaterId(Date updaterId) {
+    public void setUpdaterId(Long updaterId) {
         this.updaterId = updaterId;
     }
 

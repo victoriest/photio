@@ -11,9 +11,9 @@
     <result column="state" jdbcType="TINYINT" property="state" />
     <result column="score" jdbcType="BIGINT" property="score" />
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
-    <result column="creator_id" jdbcType="TIMESTAMP" property="creatorId" />
+    <result column="creator_id" jdbcType="BIGINT" property="creatorId" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
-    <result column="updater_id" jdbcType="TIMESTAMP" property="updaterId" />
+    <result column="updater_id" jdbcType="BIGINT" property="updaterId" />
   </resultMap>
   <sql id="Base_Column_List">
     id, account, phone, pwd, user_name, `type`, `state`, score, create_date, creator_id, 
@@ -30,24 +30,23 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="me.victoriest.photio.model.entity.User">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into user (account, phone, pwd, 
-      user_name, `type`, `state`, 
-      score, create_date, creator_id, 
-      update_date, updater_id)
-    values (#{account,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, 
-      #{userName,jdbcType=VARCHAR}, #{type,jdbcType=TINYINT}, #{state,jdbcType=TINYINT}, 
-      #{score,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{creatorId,jdbcType=TIMESTAMP}, 
-      #{updateDate,jdbcType=TIMESTAMP}, #{updaterId,jdbcType=TIMESTAMP})
+    insert into user (id, account, phone, 
+      pwd, user_name, `type`, 
+      `state`, score, create_date, 
+      creator_id, update_date, updater_id
+      )
+    values (#{id,jdbcType=BIGINT}, #{account,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+      #{pwd,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{type,jdbcType=TINYINT}, 
+      #{state,jdbcType=TINYINT}, #{score,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{creatorId,jdbcType=BIGINT}, #{updateDate,jdbcType=TIMESTAMP}, #{updaterId,jdbcType=BIGINT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="me.victoriest.photio.model.entity.User">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
     insert into user
     <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
       <if test="account != null">
         account,
       </if>
@@ -83,6 +82,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
       <if test="account != null">
         #{account,jdbcType=VARCHAR},
       </if>
@@ -108,13 +110,13 @@
         #{createDate,jdbcType=TIMESTAMP},
       </if>
       <if test="creatorId != null">
-        #{creatorId,jdbcType=TIMESTAMP},
+        #{creatorId,jdbcType=BIGINT},
       </if>
       <if test="updateDate != null">
         #{updateDate,jdbcType=TIMESTAMP},
       </if>
       <if test="updaterId != null">
-        #{updaterId,jdbcType=TIMESTAMP},
+        #{updaterId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -146,13 +148,13 @@
         create_date = #{createDate,jdbcType=TIMESTAMP},
       </if>
       <if test="creatorId != null">
-        creator_id = #{creatorId,jdbcType=TIMESTAMP},
+        creator_id = #{creatorId,jdbcType=BIGINT},
       </if>
       <if test="updateDate != null">
         update_date = #{updateDate,jdbcType=TIMESTAMP},
       </if>
       <if test="updaterId != null">
-        updater_id = #{updaterId,jdbcType=TIMESTAMP},
+        updater_id = #{updaterId,jdbcType=BIGINT},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -167,9 +169,9 @@
       `state` = #{state,jdbcType=TINYINT},
       score = #{score,jdbcType=BIGINT},
       create_date = #{createDate,jdbcType=TIMESTAMP},
-      creator_id = #{creatorId,jdbcType=TIMESTAMP},
+      creator_id = #{creatorId,jdbcType=BIGINT},
       update_date = #{updateDate,jdbcType=TIMESTAMP},
-      updater_id = #{updaterId,jdbcType=TIMESTAMP}
+      updater_id = #{updaterId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>
