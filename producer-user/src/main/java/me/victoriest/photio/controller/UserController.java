@@ -152,7 +152,7 @@ public class UserController {
     @ApiOperation(value = "退出登录")
     @ApiImplicitParam(name = "token", value = "token", required = true, dataType = "String", paramType = "query")
     public ResponseDto logout(@ApiIgnore @LoginUser User user) {
-        tokenService.removeUserLastLoginToken(user.getId());
+        tokenService.removeUserLastLoginToken(user.getAccount());
         return new ResponseDto().success();
     }
 

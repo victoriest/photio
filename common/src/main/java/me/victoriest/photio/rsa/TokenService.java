@@ -80,8 +80,8 @@ public class TokenService {
         // 将account对应的token保存起来，实现唯一设备登录功能
         redisTemplate.opsForValue().set(account, token);
 
-        // token绑定关系由account变为userId后，用户登录成功后，解除用户之前account和token的绑定关系（清理缓存）
-        Optional<String> accountLastLoginToken = Optional.ofNullable((String) redisTemplate.opsForValue().get(account));
+        Optional<String> accountLastLoginToken = Optional.ofNullable(
+                (String) redisTemplate.opsForValue().get(account));
         if (accountLastLoginToken.isPresent()) {
             String accountTokenKey = CacheKey.TOKEN_KEY_PREFIX + accountLastLoginToken.get();
             redisTemplate.delete(accountTokenKey);
@@ -89,10 +89,6 @@ public class TokenService {
         }
 
         return map;
-    }
-
-    private void writeTokenIntoCache() {
-
     }
 
 
@@ -109,28 +105,22 @@ public class TokenService {
 
     /**
      * 获取用户最后一次登录获取的token
-     * changelog: 1.1.1 版本参数由account 修改为 userId,方法名由getAccountLastLoginToken修改为getUserLastLoginToken
-     *
-     * @param userId 用户id(主键)
      * @return
      */
-    public Optional<String> getUserLastLoginToken(Long userId) {
-        return Optional.ofNullable((String) redisTemplate.opsForValue().get(userId.toString()));
+    public Optional<String> getUserLastLoginToken(String account) {
+        return Optional.ofNullable((String) redisTemplate.opsForValue().get(account));
     }
 
     /**
      * 账号冻结后，让账号登录状态失效
-     * changelog: 1.1.1 版本参数由account 修改为 userId,方法名由removeAccountLastLoginToken修改为removeUserLastLoginToken
-     *
-     * @param userId 用户id(主键)
      */
-    public void removeUserLastLoginToken(Long userId) {
-        Optional<String> userLastLoginToken = getUserLastLoginToken(userId);
+    public void removeUserLastLoginToken(String account) {
+        Optional<String> userLastLoginToken = getUserLastLoginToken(account);
 
         if (userLastLoginToken.isPresent()) {
             String key = CacheKey.TOKEN_KEY_PREFIX + userLastLoginToken.get();
             redisTemplate.delete(key);
-            redisTemplate.delete(userId.toString());
+            redisTemplate.delete(account);
         }
     }
 

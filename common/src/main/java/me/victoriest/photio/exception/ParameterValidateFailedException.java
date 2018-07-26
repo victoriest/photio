@@ -2,7 +2,7 @@ package me.victoriest.photio.exception;
 
 
 /**
- * 参数校验不通过Excepiton
+ * 参数校验不通过exception
  *
  * @author lihu
  * @date 2017/6/22
