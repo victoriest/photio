@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.victoriest.photio.dao.mapper.source.InvitationMapper">
+  <resultMap id="BaseResultMap" type="me.victoriest.photio.model.entity.Invitation">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="invitor_id" jdbcType="BIGINT" property="invitorId" />
+    <result column="target_user_id" jdbcType="BIGINT" property="targetUserId" />
+    <result column="state" jdbcType="TINYINT" property="state" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="creator_id" jdbcType="BIGINT" property="creatorId" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="updater_id" jdbcType="BIGINT" property="updaterId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, invitor_id, target_user_id, `state`, create_date, creator_id, update_date, updater_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from invitation
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from invitation
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="me.victoriest.photio.model.entity.Invitation">
+    insert into invitation (id, invitor_id, target_user_id, 
+      `state`, create_date, creator_id, 
+      update_date, updater_id)
+    values (#{id,jdbcType=BIGINT}, #{invitorId,jdbcType=BIGINT}, #{targetUserId,jdbcType=BIGINT}, 
+      #{state,jdbcType=TINYINT}, #{createDate,jdbcType=TIMESTAMP}, #{creatorId,jdbcType=BIGINT}, 
+      #{updateDate,jdbcType=TIMESTAMP}, #{updaterId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="me.victoriest.photio.model.entity.Invitation">
+    insert into invitation
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="invitorId != null">
+        invitor_id,
+      </if>
+      <if test="targetUserId != null">
+        target_user_id,
+      </if>
+      <if test="state != null">
+        `state`,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="creatorId != null">
+        creator_id,
+      </if>
+      <if test="updateDate != null">
+        update_date,
+      </if>
+      <if test="updaterId != null">
+        updater_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="invitorId != null">
+        #{invitorId,jdbcType=BIGINT},
+      </if>
+      <if test="targetUserId != null">
+        #{targetUserId,jdbcType=BIGINT},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=TINYINT},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null">
+        #{creatorId,jdbcType=BIGINT},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updaterId != null">
+        #{updaterId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="me.victoriest.photio.model.entity.Invitation">
+    update invitation
+    <set>
+      <if test="invitorId != null">
+        invitor_id = #{invitorId,jdbcType=BIGINT},
+      </if>
+      <if test="targetUserId != null">
+        target_user_id = #{targetUserId,jdbcType=BIGINT},
+      </if>
+      <if test="state != null">
+        `state` = #{state,jdbcType=TINYINT},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorId != null">
+        creator_id = #{creatorId,jdbcType=BIGINT},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updaterId != null">
+        updater_id = #{updaterId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="me.victoriest.photio.model.entity.Invitation">
+    update invitation
+    set invitor_id = #{invitorId,jdbcType=BIGINT},
+      target_user_id = #{targetUserId,jdbcType=BIGINT},
+      `state` = #{state,jdbcType=TINYINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      creator_id = #{creatorId,jdbcType=BIGINT},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      updater_id = #{updaterId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

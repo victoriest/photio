@@ -60,5 +60,25 @@
             <columnOverride column="type" javaType="java.lang.Integer"/>
         </table>
 
+        <table tableName="schedule" domainObjectName="Schedule"
+               enableCountByExample="true"
+               enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true">
+            <columnOverride column="is_scheduled" javaType="java.lang.Integer"/>
+        </table>
+
+        <table tableName="invitation" domainObjectName="Invitation"
+               enableCountByExample="false"
+               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false">
+            <columnOverride column="state" javaType="java.lang.Integer"/>
+        </table>
+
+        <table tableName="evaluation" domainObjectName="Evaluation"
+               enableCountByExample="false"
+               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false">
+        </table>
+
     </context>
 </generatorConfiguration>
