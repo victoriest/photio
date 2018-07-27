@@ -1,0 +1,23 @@
+server:
+  port: 8070
+spring:
+  application:
+    name: py-sidecar
+sidecar:
+  port: 3000
+  health-uri: http://localhost:${sidecar.port}/health
+
+ribbon:
+    ConnectTimeout: 5000
+#    MaxAutoRetries: 1
+#    MaxAutoRetriesNextServer: 1
+#    OkToRetryOnAllOperations: true
+    ReadTimeout: 5000
+
+hystrix:
+    command:
+        default:
+            execution:
+                isolation:
+                    thread:
+                        timeoutInMilliseconds: 6000
