@@ -20,6 +20,7 @@
         <module>common</module>
         <module>eureka</module>
         <module>producer-user</module>
+        <module>producer-schedule</module>
         <module>py-sidecar</module>
     </modules>
 
