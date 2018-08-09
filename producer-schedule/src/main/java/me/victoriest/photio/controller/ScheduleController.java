@@ -5,12 +5,18 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import me.victoriest.photio.annotation.LoginUser;
 import me.victoriest.photio.model.dto.ResponseDto;
+import me.victoriest.photio.model.entity.Schedule;
 import me.victoriest.photio.model.entity.User;
+import me.victoriest.photio.service.ScheduleService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 /**
  *
@@ -21,6 +27,11 @@ import java.util.Date;
 @RestController("scheduleController")
 @RequestMapping(value = "/v1/api")
 public class ScheduleController {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    private ScheduleService scheduleService;
 
     @ApiOperation(value = "创建一个日程")
     @ApiImplicitParams({
@@ -34,7 +45,8 @@ public class ScheduleController {
                                       @RequestParam Date date,
                                       @RequestParam Integer userType,
                                       @RequestParam String tags) {
-        throw new NotImplementedException();
+        Optional<Long> result = scheduleService.createSchedule(user.getId(), date, userType, tags);
+        return new ResponseDto().success(result.get());
     }
 
     @ApiImplicitParams({
@@ -48,7 +60,8 @@ public class ScheduleController {
                                      @RequestParam Date beginDate,
                                      @RequestParam Date endDate,
                                      @RequestParam String tags) {
-        throw new NotImplementedException();
+        List<Schedule> result = scheduleService.searchPartner(user.getId(), beginDate, endDate, tags);
+        return new ResponseDto().success(result);
     }
 
 //    public ResponseDto invite() {}
