@@ -37,16 +37,26 @@ public class ScheduleController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "Long"),
             @ApiImplicitParam(name = "date", value = "日程时间", required = true, dataType = "Date"),
-            @ApiImplicitParam(name = "userType", value = "用户类型", required = true, dataType = "int"),
             @ApiImplicitParam(name = "tags", value = "用户自定义tags", required = true, dataType = "String")
     })
     @PutMapping("/schedule")
     public ResponseDto createSchedule(@ApiIgnore @LoginUser User user,
                                       @RequestParam Date date,
-                                      @RequestParam Integer userType,
                                       @RequestParam String tags) {
-        Optional<Long> result = scheduleService.createSchedule(user.getId(), date, userType, tags);
+        Optional<Long> result = scheduleService.createSchedule(user.getId(), date, tags);
         return new ResponseDto().success(result.get());
+    }
+
+    @ApiOperation(value = "日程确定")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "Long"),
+            @ApiImplicitParam(name = "scheduleId", value = "日程ID", required = true, dataType = "Long")
+    })
+    @PutMapping("/scheduled")
+    public ResponseDto scheduledTheSchedule(@ApiIgnore @LoginUser User user,
+                                            @RequestParam Long scheduleId) {
+        boolean result = scheduleService.scheduledTheSchedule(user.getId(), scheduleId);
+        return result ? new ResponseDto().success() : new ResponseDto().fail("");
     }
 
     @ApiImplicitParams({
@@ -63,11 +73,5 @@ public class ScheduleController {
         List<Schedule> result = scheduleService.searchPartner(user.getId(), beginDate, endDate, tags);
         return new ResponseDto().success(result);
     }
-
-//    public ResponseDto invite() {}
-//
-//    public ResponseDto acceptInvitation() {}
-//
-//    public ResponseDto rejectInvitation() {}
 
 }
