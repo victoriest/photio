@@ -60,17 +60,18 @@ public class ScheduleController {
     }
 
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "Long"),
             @ApiImplicitParam(name = "beginDate", value = "日程时间", required = true, dataType = "Date"),
             @ApiImplicitParam(name = "endDate", value = "日程时间", dataType = "Date"),
             @ApiImplicitParam(name = "tags", value = "用户自定义tags", dataType = "String")
     })
     @GetMapping("/search")
     public ResponseDto searchPartner(@ApiIgnore @LoginUser User user,
+                                     @RequestParam Long userId,
                                      @RequestParam Date beginDate,
                                      @RequestParam Date endDate,
                                      @RequestParam String tags) {
-        List<Schedule> result = scheduleService.searchPartner(user.getId(), beginDate, endDate, tags);
+        List<Schedule> result = scheduleService.searchPartner(userId, beginDate, endDate, tags);
         return new ResponseDto().success(result);
     }
 

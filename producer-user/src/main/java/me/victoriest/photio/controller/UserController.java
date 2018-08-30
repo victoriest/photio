@@ -156,6 +156,7 @@ public class UserController {
         return new ResponseDto().success();
     }
 
+    @IgnoreAuthorize
     @ApiOperation(value = "获取指定id的用户信息")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "用户id", required = true, dataType = "int")

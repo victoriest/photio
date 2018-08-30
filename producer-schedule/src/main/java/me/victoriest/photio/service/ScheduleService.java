@@ -4,6 +4,7 @@ import me.victoriest.photio.dao.mapper.source.ScheduleMapper;
 import me.victoriest.photio.model.entity.Schedule;
 import me.victoriest.photio.model.entity.ScheduleExample;
 import me.victoriest.photio.model.entity.User;
+import me.victoriest.photio.service.feign.UserFeignClient;
 import me.victoriest.photio.util.SnowFlakeIdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,10 +32,13 @@ public class ScheduleService {
     @Autowired
     private ScheduleMapper scheduleMapper;
 
+    @Autowired
+    UserFeignClient userFeignClient;
+
     public Optional<Long> createSchedule(Long userId,
                                          Date date,
                                          String tags) {
-        // TODO 查询用户信息
+        User user = userFeignClient.getById(userId).getData();
 
         Long id = snowFlakeIdGenerator.nextId();
         Date now = new Date();
@@ -54,11 +58,14 @@ public class ScheduleService {
     }
 
     public boolean scheduledTheSchedule(Long userId, Long scheduleId) {
-        // TODO 查询用户信息
+        User user = userFeignClient.getById(userId).getData();
 
         Schedule schedule = new Schedule();
         schedule.setId(scheduleId);
         schedule.setIsScheduled(1);
+        schedule.setUpdaterId(userId);
+        schedule.setUpdateDate(new Date());
+
         int result = scheduleMapper.updateByPrimaryKeySelective(schedule);
         return result > 0;
     }
@@ -68,7 +75,7 @@ public class ScheduleService {
                                         Date endDate,
                                         String tags) {
         // TODO 查询用户信息
-        User user;
+        User user = userFeignClient.getById(userId).getData();
         ScheduleExample example = new ScheduleExample();
 
         ScheduleExample.Criteria criteria = example.createCriteria();
