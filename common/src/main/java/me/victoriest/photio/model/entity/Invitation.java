@@ -10,6 +10,10 @@ public class Invitation implements Serializable {
 
     private Long targetUserId;
 
+    private Long targetScheduleId;
+
+    private Date scheduledDate;
+
     private Integer state;
 
     private Date createDate;
@@ -44,6 +48,22 @@ public class Invitation implements Serializable {
 
     public void setTargetUserId(Long targetUserId) {
         this.targetUserId = targetUserId;
+    }
+
+    public Long getTargetScheduleId() {
+        return targetScheduleId;
+    }
+
+    public void setTargetScheduleId(Long targetScheduleId) {
+        this.targetScheduleId = targetScheduleId;
+    }
+
+    public Date getScheduledDate() {
+        return scheduledDate;
+    }
+
+    public void setScheduledDate(Date scheduledDate) {
+        this.scheduledDate = scheduledDate;
     }
 
     public Integer getState() {
@@ -95,6 +115,8 @@ public class Invitation implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", invitorId=").append(invitorId);
         sb.append(", targetUserId=").append(targetUserId);
+        sb.append(", targetScheduleId=").append(targetScheduleId);
+        sb.append(", scheduledDate=").append(scheduledDate);
         sb.append(", state=").append(state);
         sb.append(", createDate=").append(createDate);
         sb.append(", creatorId=").append(creatorId);

@@ -285,6 +285,126 @@ public class InvitationExample {
             return (Criteria) this;
         }
 
+        public Criteria andTargetScheduleIdIsNull() {
+            addCriterion("target_schedule_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTargetScheduleIdIsNotNull() {
+            addCriterion("target_schedule_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTargetScheduleIdEqualTo(Long value) {
+            addCriterion("target_schedule_id =", value, "targetScheduleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTargetScheduleIdNotEqualTo(Long value) {
+            addCriterion("target_schedule_id <>", value, "targetScheduleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTargetScheduleIdGreaterThan(Long value) {
+            addCriterion("target_schedule_id >", value, "targetScheduleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTargetScheduleIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("target_schedule_id >=", value, "targetScheduleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTargetScheduleIdLessThan(Long value) {
+            addCriterion("target_schedule_id <", value, "targetScheduleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTargetScheduleIdLessThanOrEqualTo(Long value) {
+            addCriterion("target_schedule_id <=", value, "targetScheduleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTargetScheduleIdIn(List<Long> values) {
+            addCriterion("target_schedule_id in", values, "targetScheduleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTargetScheduleIdNotIn(List<Long> values) {
+            addCriterion("target_schedule_id not in", values, "targetScheduleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTargetScheduleIdBetween(Long value1, Long value2) {
+            addCriterion("target_schedule_id between", value1, value2, "targetScheduleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTargetScheduleIdNotBetween(Long value1, Long value2) {
+            addCriterion("target_schedule_id not between", value1, value2, "targetScheduleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andScheduledDateIsNull() {
+            addCriterion("scheduled_date is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andScheduledDateIsNotNull() {
+            addCriterion("scheduled_date is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andScheduledDateEqualTo(Date value) {
+            addCriterion("scheduled_date =", value, "scheduledDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andScheduledDateNotEqualTo(Date value) {
+            addCriterion("scheduled_date <>", value, "scheduledDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andScheduledDateGreaterThan(Date value) {
+            addCriterion("scheduled_date >", value, "scheduledDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andScheduledDateGreaterThanOrEqualTo(Date value) {
+            addCriterion("scheduled_date >=", value, "scheduledDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andScheduledDateLessThan(Date value) {
+            addCriterion("scheduled_date <", value, "scheduledDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andScheduledDateLessThanOrEqualTo(Date value) {
+            addCriterion("scheduled_date <=", value, "scheduledDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andScheduledDateIn(List<Date> values) {
+            addCriterion("scheduled_date in", values, "scheduledDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andScheduledDateNotIn(List<Date> values) {
+            addCriterion("scheduled_date not in", values, "scheduledDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andScheduledDateBetween(Date value1, Date value2) {
+            addCriterion("scheduled_date between", value1, value2, "scheduledDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andScheduledDateNotBetween(Date value1, Date value2) {
+            addCriterion("scheduled_date not between", value1, value2, "scheduledDate");
+            return (Criteria) this;
+        }
+
         public Criteria andStateIsNull() {
             addCriterion("`state` is null");
             return (Criteria) this;
