@@ -2,7 +2,6 @@ package me.victoriest.photio.service.feign;
 
 import me.victoriest.photio.model.dto.ResponseDto;
 import me.victoriest.photio.model.entity.User;
-import me.victoriest.photio.service.hystrix.UserFeignHystrix;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * photio
  */
 @Component
-@FeignClient(name = "producer-user", fallback = UserFeignHystrix.class)
+@FeignClient(name = "producer-user")
 public interface UserFeignClient {
 
     @RequestMapping(value = "v1/api/user/{userId}", method = RequestMethod.GET)

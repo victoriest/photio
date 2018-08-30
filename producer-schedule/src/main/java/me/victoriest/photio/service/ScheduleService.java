@@ -35,11 +35,14 @@ public class ScheduleService {
     @Autowired
     UserFeignClient userFeignClient;
 
+    public Optional<Schedule> getSchedule(Long scheduleId) {
+        Schedule schedule = scheduleMapper.selectByPrimaryKey(scheduleId);
+        return Optional.of(schedule);
+    }
+
     public Optional<Long> createSchedule(Long userId,
                                          Date date,
                                          String tags) {
-        User user = userFeignClient.getById(userId).getData();
-
         Long id = snowFlakeIdGenerator.nextId();
         Date now = new Date();
         Schedule schedule = new Schedule();
@@ -58,8 +61,6 @@ public class ScheduleService {
     }
 
     public boolean scheduledTheSchedule(Long userId, Long scheduleId) {
-        User user = userFeignClient.getById(userId).getData();
-
         Schedule schedule = new Schedule();
         schedule.setId(scheduleId);
         schedule.setIsScheduled(1);
@@ -74,7 +75,7 @@ public class ScheduleService {
                                         Date beginDate,
                                         Date endDate,
                                         String tags) {
-        // TODO 查询用户信息
+        //  query user info
         User user = userFeignClient.getById(userId).getData();
         ScheduleExample example = new ScheduleExample();
 

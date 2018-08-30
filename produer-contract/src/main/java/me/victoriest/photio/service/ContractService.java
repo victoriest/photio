@@ -2,10 +2,9 @@ package me.victoriest.photio.service;
 
 import me.victoriest.photio.dao.mapper.source.EvaluationMapper;
 import me.victoriest.photio.dao.mapper.source.InvitationMapper;
-import me.victoriest.photio.model.entity.Evaluation;
-import me.victoriest.photio.model.entity.Invitation;
-import me.victoriest.photio.model.entity.InvitationExample;
-import me.victoriest.photio.model.entity.User;
+import me.victoriest.photio.model.entity.*;
+import me.victoriest.photio.service.feign.ScheduleFeignClient;
+import me.victoriest.photio.service.feign.UserFeignClient;
 import me.victoriest.photio.util.SnowFlakeIdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,18 +35,29 @@ public class ContractService {
     @Autowired
     private EvaluationMapper evaluationMapper;
 
+    @Autowired
+    UserFeignClient userFeignClient;
+
+    @Autowired
+    ScheduleFeignClient scheduleFeignClient;
+
     public Optional<Long> invite(@RequestParam Long userId,
                                  @RequestParam Long scheduleId,
                                  @RequestParam Long targetUserId) {
-        // TODO 查询user信息
+        // check the targetUser if is available
+        Schedule schedule = scheduleFeignClient.getScheduleById(scheduleId).getData();
 
-        // TODO 查询schedule信息
+        if(schedule.getIsScheduled() == 1) {
+            return Optional.empty();
+        }
 
         Long id = snowFlakeIdGenerator.nextId();
         Date now = new Date();
         Invitation invitation = new Invitation();
         invitation.setId(id);
         invitation.setInvitorId(userId);
+        invitation.setTargetScheduleId(scheduleId);
+        invitation.setScheduledDate(schedule.getFreeDate());
         invitation.setTargetUserId(targetUserId);
         invitation.setCreatorId(userId);
         invitation.setState(0);
@@ -59,27 +69,29 @@ public class ContractService {
     }
 
     public boolean updateInvitationState(Long userId, Long invitationId, int state) {
-        // TODO 查询user信息
-        User user;
 
-        // TODO 更新schedule状态
+        // if the invitation has been accepted, then update the state of schedule
+        // TODO there is a distributed transaction problem
+        if(state == 1) {
+            Invitation invit = invitationMapper.selectByPrimaryKey(invitationId);
+            scheduleFeignClient.scheduledTheSchedule(userId, invit.getTargetScheduleId());
+        }
+
         InvitationExample example = new InvitationExample();
         InvitationExample.Criteria criteria = example.createCriteria();
 
         Invitation invitation = new Invitation();
         invitation.setInvitorId(invitationId);
         invitation.setState(state);
-        return invitationMapper.updateByPrimaryKey(invitation) > 0;
 
+        return invitationMapper.updateByPrimaryKey(invitation) > 0;
     }
 
     public Optional<Long> evaluate(Long userId,
                                    Long targetUserId,
                                    int score,
                                    String message) {
-        // TODO 查询user信息
-        User user;
-
+        // TODO check if the scheduled date is early then date now
         Long id = snowFlakeIdGenerator.nextId();
         Date now = new Date();
         Evaluation evaluation = new Evaluation();

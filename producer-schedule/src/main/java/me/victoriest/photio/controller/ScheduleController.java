@@ -3,6 +3,7 @@ package me.victoriest.photio.controller;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import me.victoriest.photio.annotation.IgnoreAuthorize;
 import me.victoriest.photio.annotation.LoginUser;
 import me.victoriest.photio.model.dto.ResponseDto;
 import me.victoriest.photio.model.entity.Schedule;
@@ -33,6 +34,16 @@ public class ScheduleController {
     @Autowired
     private ScheduleService scheduleService;
 
+    @ApiOperation(value = "根据指定id获取日程")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "schedule id", required = true, dataType = "Long")
+    })
+    @GetMapping("/schedule/{id}")
+    public ResponseDto<Schedule> getSchedule(@PathVariable Long id) {
+        Schedule result = scheduleService.getSchedule(id).get();
+        return new ResponseDto<Schedule>().success(result);
+    }
+
     @ApiOperation(value = "创建一个日程")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "Long"),
@@ -47,6 +58,7 @@ public class ScheduleController {
         return new ResponseDto().success(result.get());
     }
 
+    @IgnoreAuthorize
     @ApiOperation(value = "日程确定")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "Long"),
@@ -54,8 +66,9 @@ public class ScheduleController {
     })
     @PutMapping("/scheduled")
     public ResponseDto scheduledTheSchedule(@ApiIgnore @LoginUser User user,
+                                            @RequestParam Long userId,
                                             @RequestParam Long scheduleId) {
-        boolean result = scheduleService.scheduledTheSchedule(user.getId(), scheduleId);
+        boolean result = scheduleService.scheduledTheSchedule(userId, scheduleId);
         return result ? new ResponseDto().success() : new ResponseDto().fail("");
     }
 
