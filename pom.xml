@@ -22,7 +22,8 @@
         <module>producer-user</module>
         <module>producer-schedule</module>
         <module>py-sidecar</module>
-        <module>produer-contract</module>
+        <module>producer-contract</module>
+        <module>gateway</module>
     </modules>
 
     <build>

@@ -1,0 +1,23 @@
+server:
+  port: 9000
+
+# 需要指明spring.application.name
+# 这个很重要，这在以后的服务与服务之间相互调用一般都是根据这个name
+spring:
+  application:
+    name: gateway
+
+token:
+  enable: true
+
+zuul:
+  routes:
+    producer-user:
+      path: /producer-user/**
+      serviceId: producer-user
+    producer-contract:
+      path: /producer-contract/**
+      serviceId: producer-contract
+    producer-schedule:
+          path: /prodcuer-schedule/**
+          serviceId: prodcuer-schedule
