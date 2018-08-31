@@ -139,6 +139,12 @@
                 <version>1.10</version>
             </dependency>
 
+            <dependency>
+                <groupId>me.victoriest</groupId>
+                <artifactId>common</artifactId>
+                <version>0.1</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

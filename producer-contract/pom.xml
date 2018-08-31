@@ -132,6 +132,11 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>me.victoriest</groupId>
+            <artifactId>common</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
