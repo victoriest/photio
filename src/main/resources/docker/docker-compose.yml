@@ -27,5 +27,17 @@ services:
     networks:
       - photio
 
+  pal-redis:
+    image: redis:3.2
+    ports:
+      - "7002:7000"
+    volumes:
+      - /home/docker/photio/photio-redis/data/:/data
+      - /home/docker/photio/photio-redis/data/:/home/redis/
+      - /home/docker/photio/photio-redis/redis.conf:/home/docker/photio/photio-redis/redis.conf
+    command: redis-server /home/docker/photio/photio-redis/redis.conf
+    networks:
+      - photio
+
 networks:
   photio:
