@@ -34,6 +34,8 @@ public class AuthorizationZuulFilter extends ZuulFilter {
             "/producer-user/v1/api/login",
             "/producer-user/v1/api/registry",
             "/producer-user/v1/api/getRsaKey",
+            "/producer-user/v1/api/getRsaKey",
+            "/v2/api-docs"
     };
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());

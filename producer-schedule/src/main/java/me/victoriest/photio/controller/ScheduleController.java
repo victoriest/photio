@@ -36,7 +36,7 @@ public class ScheduleController {
 
     @ApiOperation(value = "根据指定id获取日程")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "schedule id", required = true, dataType = "Long")
+            @ApiImplicitParam(name = "id", value = "schedule id", required = true, dataType = "long")
     })
     @GetMapping("/schedule/{id}")
     public ResponseDto<Schedule> getSchedule(@PathVariable Long id) {
@@ -46,7 +46,7 @@ public class ScheduleController {
 
     @ApiOperation(value = "创建一个日程")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "Long"),
+            @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "long"),
             @ApiImplicitParam(name = "date", value = "日程时间", required = true, dataType = "Date"),
             @ApiImplicitParam(name = "tags", value = "用户自定义tags", required = true, dataType = "String")
     })
@@ -61,8 +61,8 @@ public class ScheduleController {
     @IgnoreAuthorize
     @ApiOperation(value = "日程确定")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "Long"),
-            @ApiImplicitParam(name = "scheduleId", value = "日程ID", required = true, dataType = "Long")
+            @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "long"),
+            @ApiImplicitParam(name = "scheduleId", value = "日程ID", required = true, dataType = "long")
     })
     @PutMapping("/scheduled")
     public ResponseDto scheduledTheSchedule(@ApiIgnore @LoginUser User user,
@@ -73,7 +73,7 @@ public class ScheduleController {
     }
 
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "Long"),
+            @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "long"),
             @ApiImplicitParam(name = "beginDate", value = "日程时间", required = true, dataType = "Date"),
             @ApiImplicitParam(name = "endDate", value = "日程时间", dataType = "Date"),
             @ApiImplicitParam(name = "tags", value = "用户自定义tags", dataType = "String")
