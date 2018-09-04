@@ -52,7 +52,6 @@ public class UserController {
             @ApiImplicitParam(name = "name", value = "用户名", required = true, dataType = "String"),
             @ApiImplicitParam(name = "userType", value = "用户类型", required = true, dataType = "int")
     })
-    @IgnoreAuthorize
     @PutMapping("/registry")
     public ResponseDto registry(@RequestParam String account,
                                 @RequestParam String name,
@@ -62,7 +61,6 @@ public class UserController {
     }
 
     @ApiOperation(value = "获取rsa公钥")
-    @IgnoreAuthorize
     @GetMapping(value = "/getRsaKey")
     public ResponseDto getRsaKey() {
         try {
@@ -80,7 +78,6 @@ public class UserController {
             @ApiImplicitParam(name = "account", value = "用户账号", required = true, dataType = "String"),
             @ApiImplicitParam(name = "pwd", value = "rsa加密后的密码", required = true, dataType = "String")
     })
-    @IgnoreAuthorize
     @PostMapping(value = "/login")
     public ResponseDto login(@RequestParam String rsaKeyId,
                              @RequestParam(required = false) String account,
