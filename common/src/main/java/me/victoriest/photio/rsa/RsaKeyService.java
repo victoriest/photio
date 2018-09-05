@@ -13,6 +13,7 @@ import redis.clients.jedis.exceptions.JedisConnectionException;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -85,6 +86,20 @@ public class RsaKeyService {
         if (key != null) {
             PrivateKey privateKey = RSA.generateRSAPrivateKey(key);
             return Optional.ofNullable(RSA.decrypt(privateKey, secretText));
+        }
+        return Optional.empty();
+    }
+
+    public Optional<String> encrypt(String keyId, String secretText) throws Exception {
+
+        RSAPrivateKey key = keyStore.get(keyId);
+        if (key == null) {
+            // 从缓存中获取
+            key = (RSAPrivateKey) redisTemplate.opsForValue().get(KEY_PREFIX + keyId);
+        }
+        if (key != null) {
+            PublicKey publicKey = RSA.generateRSAPublicKey(key);
+            return Optional.ofNullable(RSA.encrypt(publicKey, secretText));
         }
         return Optional.empty();
     }

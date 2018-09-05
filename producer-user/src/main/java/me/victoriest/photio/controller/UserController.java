@@ -1,10 +1,14 @@
 package me.victoriest.photio.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import me.victoriest.photio.annotation.IgnoreAuthorize;
 import me.victoriest.photio.annotation.LoginUser;
+import me.victoriest.photio.dto.EncryptedRequestDto;
+import me.victoriest.photio.dto.LoginInfoDto;
 import me.victoriest.photio.exception.BusinessLogicException;
 import me.victoriest.photio.message.Messages;
 import me.victoriest.photio.model.dto.ResponseDto;
@@ -23,7 +27,6 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.Optional;
-
 
 /**
  *
@@ -72,38 +75,60 @@ public class UserController {
         }
     }
 
-    @ApiOperation(value = "登录")
+    @ApiOperation(value = "测试用, 返回rsa加密后的数据")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "rsaKeyId", value = "获取的rsa公钥id", required = true, dataType = "String"),
             @ApiImplicitParam(name = "account", value = "用户账号", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "pwd", value = "rsa加密后的密码", required = true, dataType = "String")
+            @ApiImplicitParam(name = "pwd", value = "密码", required = true, dataType = "String")
+    })
+    @GetMapping(value = "/testRsa")
+    public ResponseDto generateEncryptedLoginData(@RequestParam String rsaKeyId,
+                                                  @RequestParam String account,
+                                                  @RequestParam String pwd) {
+        JSONObject json = new JSONObject();
+        json.put("username", account);
+        json.put("password", pwd);
+        String result = "";
+        try {
+            result = rsaKeyService.encrypt(rsaKeyId, json.toJSONString()).get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseDto<>().success(result);
+    }
+
+
+    @ApiOperation(value = "登录")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "rsaKeyId", value = "获取的rsa公钥id", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "secretText", value = "加密后的数据", required = true, dataType = "String")
     })
     @PostMapping(value = "/login")
-    public ResponseDto login(@RequestParam String rsaKeyId,
-                             @RequestParam(required = false) String account,
-                             @RequestParam String pwd) {
+    public ResponseDto login(@RequestBody EncryptedRequestDto params) {
 
-        Optional<String> userPwd;
+        Optional<String> jsonString;
         try {
             /*// 测试发现前台使用encodeURIComponent()方法进行编码，传递到后台已经自动转码了，若未转码，请使用下面的方法进行转码操作
             pwd = StringEscapeUtils.escapeJava(pwd);*/
-            userPwd = rsaKeyService.decrypt(rsaKeyId, pwd);
+            jsonString = rsaKeyService.decrypt(params.getRsaKeyId(), params.getSecretText());
         } catch (Exception e) {
             throw new BusinessLogicException(Messages.LOGIN_USER_PWD_RSA_DECRYPT_FAILED);
         }
 
-        if (userPwd.isPresent()) {
+        if (jsonString.isPresent()) {
 
-            Optional<User> optUser = userService.getByAccount(account);
+            LoginInfoDto dto = JSON.parseObject(jsonString.get(), LoginInfoDto.class);
+
+            Optional<User> optUser = userService.getByAccount(dto.getUsername());
             if(!optUser.isPresent()) {
                 throw new BusinessLogicException(Messages.LOGIN_UER_NOT_FOUND);
             }
             User user = optUser.get();
 
-            account = user.getAccount();
+            String account = user.getAccount();
 
             // 密码不正确
-            if (!Md5Utils.getMD5(userPwd.get(), account).equals(user.getPwd())) {
+            if (!Md5Utils.getMD5(dto.getPassword(), account).equals(user.getPwd())) {
                 throw new BusinessLogicException(Messages.LOGIN_UER_NOT_FOUND);
             }
 

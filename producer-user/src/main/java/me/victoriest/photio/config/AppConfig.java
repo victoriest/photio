@@ -27,14 +27,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 })
 public class AppConfig extends WebMvcConfigurationSupport {
 
-    @Autowired
-    private AuthorizationInterceptor authorizationInterceptor;
+//    @Autowired
+//    private AuthorizationInterceptor authorizationInterceptor;
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(authorizationInterceptor)
-                .addPathPatterns("/v1/api/**");
-    }
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(authorizationInterceptor)
+//                .addPathPatterns("/v1/api/**");
+//    }
 
     @Bean
     @LoadBalanced
