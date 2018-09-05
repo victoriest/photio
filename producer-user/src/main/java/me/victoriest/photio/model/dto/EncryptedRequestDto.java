@@ -1,4 +1,4 @@
-package me.victoriest.photio.dto;
+package me.victoriest.photio.model.dto;
 
 import java.io.Serializable;
 

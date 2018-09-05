@@ -7,8 +7,8 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import me.victoriest.photio.annotation.IgnoreAuthorize;
 import me.victoriest.photio.annotation.LoginUser;
-import me.victoriest.photio.dto.EncryptedRequestDto;
-import me.victoriest.photio.dto.LoginInfoDto;
+import me.victoriest.photio.model.dto.EncryptedRequestDto;
+import me.victoriest.photio.model.dto.LoginInfoDto;
 import me.victoriest.photio.exception.BusinessLogicException;
 import me.victoriest.photio.message.Messages;
 import me.victoriest.photio.model.dto.ResponseDto;
@@ -100,8 +100,7 @@ public class UserController {
 
     @ApiOperation(value = "登录")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "rsaKeyId", value = "获取的rsa公钥id", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "secretText", value = "加密后的数据", required = true, dataType = "String")
+            @ApiImplicitParam(name = "params", value = "加密后的数据", required = true, dataType = "EncryptedRequestDto")
     })
     @PostMapping(value = "/login")
     public ResponseDto login(@RequestBody EncryptedRequestDto params) {
