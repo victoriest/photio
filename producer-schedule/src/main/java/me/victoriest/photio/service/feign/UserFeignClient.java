@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -18,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Component
 @FeignClient(name = "producer-user", fallback = UserFeignHystrix.class)
 public interface UserFeignClient {
+
+    @RequestMapping(value = "v1/api/verifyToken", method = RequestMethod.GET)
+    ResponseDto verifyToken(@RequestParam(value = "token") String token);
 
     @RequestMapping(value = "v1/api/user/{userId}", method = RequestMethod.GET)
     ResponseDto<User> getById(@PathVariable(value = "userId") Long userId);

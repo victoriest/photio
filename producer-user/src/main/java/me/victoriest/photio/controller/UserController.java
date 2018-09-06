@@ -141,6 +141,18 @@ public class UserController {
         }
     }
 
+    @ApiOperation(value = "验证token是否有效")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "token", value = "待验证的token", required = true, dataType = "String")
+    })
+    @GetMapping(value = "/verifyToken")
+    public ResponseDto verifyToken(@RequestParam String token) {
+        if (tokenService.verifyToken(token)) {
+            return new ResponseDto().success("");
+        }
+        throw new BusinessLogicException(Messages.TOKEN_INVALID);
+    }
+
     @PostMapping("/user/{id}/change-pwd")
     @ApiOperation(value = "更新用户密码")
     @ApiImplicitParams({
@@ -153,6 +165,7 @@ public class UserController {
                                       @RequestParam String rsaKeyId,
                                       @RequestParam String oldPwd,
                                       @RequestParam String newPwd) {
+        // TODO using rsa to encrypt oldPwd and newPwd
         boolean result = userService.changePassword(user.getId(), rsaKeyId, oldPwd, newPwd);
         return result ? new ResponseDto().success() : new ResponseDto().fail("");
     }

@@ -13,6 +13,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class UserFeignHystrix implements UserFeignClient {
+
+    @Override
+    public ResponseDto verifyToken(String token) {
+        return new ResponseDto<User>().fail("error hystrix");
+    }
+
     @Override
     public ResponseDto<User> getById(Long userId) {
         return new ResponseDto<User>().fail("error hystrix");

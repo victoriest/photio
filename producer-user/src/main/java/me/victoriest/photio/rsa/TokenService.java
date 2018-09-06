@@ -72,7 +72,7 @@ public class TokenService {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("token", token);
         map.put("account", account);
-        map.put("expireTime", String.valueOf(expireTime.getTime()));
+        map.put("expireTime", expireTime.getTime());
 
         // 将token信息写入到redis
         redisTemplate.opsForValue().set(key, map);
@@ -109,6 +109,25 @@ public class TokenService {
      */
     public Optional<String> getUserLastLoginToken(String account) {
         return Optional.ofNullable((String) redisTemplate.opsForValue().get(account));
+    }
+
+    /**
+     * 验证token是否合法
+     * @param token
+     * @return
+     */
+    public boolean verifyToken(String token) {
+        Optional<Map<String, Object>> tokenInfo = getTokenInfo(token);
+        if(!tokenInfo.isPresent()) {
+            return false;
+        }
+        Date now = new Date();
+        if(!tokenInfo.get().containsKey("expireTime")) {
+            return false;
+        }
+        Date expireTime = (Date) tokenInfo.get().get("expireTime");
+
+        return expireTime.after(now) ? true : false;
     }
 
     /**

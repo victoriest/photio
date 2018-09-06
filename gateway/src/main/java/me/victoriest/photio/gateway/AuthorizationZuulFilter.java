@@ -4,21 +4,14 @@ import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import io.jsonwebtoken.Claims;
 import me.victoriest.photio.JwtHelper;
-import me.victoriest.photio.config.TokenConfig;
 import me.victoriest.photio.exception.BusinessLogicException;
 import me.victoriest.photio.message.Messages;
-import me.victoriest.photio.rsa.TokenService;
-import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * zuul服务过滤
