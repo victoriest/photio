@@ -4,6 +4,7 @@ import me.victoriest.photio.dao.mapper.source.ScheduleMapper;
 import me.victoriest.photio.model.entity.Schedule;
 import me.victoriest.photio.model.entity.ScheduleExample;
 import me.victoriest.photio.model.entity.User;
+import me.victoriest.photio.mq.ScheduleMqProcessor;
 import me.victoriest.photio.service.feign.UserFeignClient;
 import me.victoriest.photio.util.SnowFlakeIdGenerator;
 import org.slf4j.Logger;
@@ -34,6 +35,9 @@ public class ScheduleService {
 
     @Autowired
     UserFeignClient userFeignClient;
+
+    @Autowired
+    ScheduleMqProcessor scheduleMqProcessor;
 
     public Optional<Schedule> getSchedule(Long scheduleId) {
         Schedule schedule = scheduleMapper.selectByPrimaryKey(scheduleId);

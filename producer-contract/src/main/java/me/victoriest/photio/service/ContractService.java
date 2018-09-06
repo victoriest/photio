@@ -3,6 +3,7 @@ package me.victoriest.photio.service;
 import me.victoriest.photio.dao.mapper.source.EvaluationMapper;
 import me.victoriest.photio.dao.mapper.source.InvitationMapper;
 import me.victoriest.photio.model.entity.*;
+import me.victoriest.photio.mq.ContractMqProcessor;
 import me.victoriest.photio.service.feign.ScheduleFeignClient;
 import me.victoriest.photio.service.feign.UserFeignClient;
 import me.victoriest.photio.util.SnowFlakeIdGenerator;

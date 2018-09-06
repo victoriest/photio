@@ -4,14 +4,12 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import me.victoriest.photio.model.dto.ResponseDto;
+import me.victoriest.photio.mq.ContractMqProcessor;
 import me.victoriest.photio.service.ContractService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -28,6 +26,10 @@ public class ContractController {
 
     @Autowired
     private ContractService contractService;
+
+    @Autowired
+    private ContractMqProcessor contractMqProcessor;
+
 
     @ApiOperation(value = "邀请伙伴")
     @ApiImplicitParams({
@@ -89,5 +91,12 @@ public class ContractController {
                                 @RequestParam String message) {
         Optional<Long> result = contractService.evaluate(userId, targetUserId, score, message);
         return new ResponseDto().success(result.get());
+    }
+
+
+    @GetMapping("testmq")
+    public ResponseDto testMq() {
+        contractMqProcessor.responseInvite("responseInvite");
+        return new ResponseDto().success();
     }
 }
