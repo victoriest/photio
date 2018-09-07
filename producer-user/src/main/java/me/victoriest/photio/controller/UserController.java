@@ -2,6 +2,7 @@ package me.victoriest.photio.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -65,6 +66,7 @@ public class UserController {
 
     @ApiOperation(value = "获取rsa公钥")
     @GetMapping(value = "/getRsaKey")
+    @HystrixCommand(fallbackMethod = "fallback")
     public ResponseDto getRsaKey() {
         try {
             RSAPubKey key = rsaKeyService.getKey();
@@ -82,6 +84,7 @@ public class UserController {
             @ApiImplicitParam(name = "pwd", value = "密码", required = true, dataType = "String")
     })
     @GetMapping(value = "/testRsa")
+    @HystrixCommand(fallbackMethod = "fallback")
     public ResponseDto generateEncryptedLoginData(@RequestParam String rsaKeyId,
                                                   @RequestParam String account,
                                                   @RequestParam String pwd) {
@@ -95,6 +98,10 @@ public class UserController {
             e.printStackTrace();
         }
         return new ResponseDto<>().success(result);
+    }
+
+    public ResponseDto fallback() {
+        return new ResponseDto<>().fail("fallback");
     }
 
 

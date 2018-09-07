@@ -17,7 +17,6 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableHystrix
-@EnableAutoConfiguration
 @ComponentScan
 @EnableEurekaClient
 public class ProducerUserApp {

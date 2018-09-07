@@ -24,6 +24,7 @@
         <module>py-sidecar</module>
         <module>producer-contract</module>
         <module>gateway</module>
+        <module>hystrix-dashboard</module>
     </modules>
 
     <build>
