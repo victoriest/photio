@@ -1,5 +1,6 @@
 package me.victoriest.photio.controller;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -36,11 +37,14 @@ public class ScheduleController {
             @ApiImplicitParam(name = "id", value = "schedule id", required = true, dataType = "long")
     })
     @GetMapping("/schedule/{id}")
+    @HystrixCommand(fallbackMethod = "getScheduleFallback")
     public ResponseDto<Schedule> getSchedule(@RequestParam String token, @PathVariable Long id) {
-
-
         Schedule result = scheduleService.getSchedule(id).get();
         return new ResponseDto<Schedule>().success(result);
+    }
+
+    public ResponseDto<Schedule> getScheduleFallback(String token, Long id) {
+        return new ResponseDto<Schedule>().fail("fallback");
     }
 
     @ApiOperation(value = "创建一个日程")
@@ -51,12 +55,20 @@ public class ScheduleController {
             @ApiImplicitParam(name = "tags", value = "用户自定义tags", required = true, dataType = "String")
     })
     @PutMapping("/schedule")
+    @HystrixCommand(fallbackMethod = "createScheduleFallback")
     public ResponseDto createSchedule(@RequestParam String token,
                                       @RequestParam Long userId,
                                       @RequestParam Date date,
                                       @RequestParam String tags) {
         Optional<Long> result = scheduleService.createSchedule(userId, date, tags);
         return new ResponseDto().success(result.get());
+    }
+
+    public ResponseDto createScheduleFallback(String token,
+                                              Long userId,
+                                              Date date,
+                                              String tags) {
+        return new ResponseDto<>().fail("fallback");
     }
 
     @ApiOperation(value = "日程确定")
@@ -66,11 +78,18 @@ public class ScheduleController {
             @ApiImplicitParam(name = "scheduleId", value = "日程ID", required = true, dataType = "long")
     })
     @PutMapping("/scheduled")
+    @HystrixCommand(fallbackMethod = "scheduledTheScheduleFallback")
     public ResponseDto scheduledTheSchedule(@RequestParam String token,
                                             @RequestParam Long userId,
                                             @RequestParam Long scheduleId) {
         boolean result = scheduleService.scheduledTheSchedule(userId, scheduleId);
         return result ? new ResponseDto().success() : new ResponseDto().fail("");
+    }
+
+    public ResponseDto scheduledTheScheduleFallback(String token,
+                                                    Long userId,
+                                                    Long scheduleId) {
+        return new ResponseDto<>().fail("fallback");
     }
 
     @ApiOperation(value = "查找合作者")
@@ -82,6 +101,7 @@ public class ScheduleController {
             @ApiImplicitParam(name = "tags", value = "用户自定义tags", dataType = "String")
     })
     @GetMapping("/search")
+    @HystrixCommand(fallbackMethod = "searchPartnerFallback")
     public ResponseDto searchPartner(@RequestParam String token,
                                      @RequestParam Long userId,
                                      @RequestParam Date beginDate,
@@ -89,6 +109,14 @@ public class ScheduleController {
                                      @RequestParam String tags) {
         List<Schedule> result = scheduleService.searchPartner(userId, beginDate, endDate, tags);
         return new ResponseDto().success(result);
+    }
+
+    public ResponseDto searchPartnerFallback(String token,
+                                             Long userId,
+                                             Date beginDate,
+                                             Date endDate,
+                                             String tags) {
+        return new ResponseDto<>().fail("fallback");
     }
 
 }

@@ -21,3 +21,10 @@ zuul:
     producer-schedule:
           path: /prodcuer-schedule/**
           serviceId: prodcuer-schedule
+
+management:
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: hystrix.stream

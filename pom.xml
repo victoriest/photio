@@ -25,6 +25,7 @@
         <module>producer-contract</module>
         <module>gateway</module>
         <module>hystrix-dashboard</module>
+        <module>turbine</module>
     </modules>
 
     <build>
