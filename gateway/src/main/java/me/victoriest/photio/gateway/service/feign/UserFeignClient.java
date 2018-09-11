@@ -32,4 +32,8 @@ public interface UserFeignClient {
     ResponseDto login(@RequestParam String rsaKeyId,
                              @RequestParam(required = false) String account,
                              @RequestParam String pwd);
+
+    @GetMapping(value = "v1/api/verifyToken")
+    ResponseDto verifyToken(@RequestParam String token);
+
 }

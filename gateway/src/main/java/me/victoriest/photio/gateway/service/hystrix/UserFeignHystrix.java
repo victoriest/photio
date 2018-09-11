@@ -32,4 +32,9 @@ public class UserFeignHystrix implements UserFeignClient {
     public ResponseDto login(String rsaKeyId, String account, String pwd) {
         return new ResponseDto<User>().fail("error hystrix");
     }
+
+    @Override
+    public ResponseDto verifyToken(String token) {
+        return new ResponseDto<User>().fail("error hystrix");
+    }
 }

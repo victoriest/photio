@@ -121,6 +121,16 @@ public class TokenService {
         if(!tokenInfo.isPresent()) {
             return false;
         }
+        Map<String, Object> map = tokenInfo.get();
+        if (map.containsKey("account")) {
+            // 判断账号是否被踢下线
+            String account = (String) map.get("account");
+            Optional<String> userLastLoginToken = getUserLastLoginToken(account);
+            if (userLastLoginToken.isPresent() && !userLastLoginToken.get().equals(token)) {
+                // 账号在其它设备登录用户被踢下线
+                return false;
+            }
+        }
         Date now = new Date();
         if(!tokenInfo.get().containsKey("expireTime")) {
             return false;

@@ -94,7 +94,6 @@ public class UserController {
             @ApiImplicitParam(name = "pwd", value = "密码", required = true, dataType = "String")
     })
     @GetMapping(value = "/testRsa")
-    @HystrixCommand(fallbackMethod = "generateEncryptedLoginDataFallback")
     public ResponseDto generateEncryptedLoginData(@RequestParam String rsaKeyId,
                                                   @RequestParam String account,
                                                   @RequestParam String pwd) {
@@ -108,12 +107,6 @@ public class UserController {
             e.printStackTrace();
         }
         return new ResponseDto<>().success(result);
-    }
-
-    public ResponseDto generateEncryptedLoginDataFallback(String rsaKeyId,
-                                                          String account,
-                                                          String pwd) {
-        return new ResponseDto<>().fail("fallback");
     }
 
     @ApiOperation(value = "登录")
