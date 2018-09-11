@@ -199,7 +199,7 @@ public class UserController {
         return new ResponseDto<>().fail("fallback");
     }
 
-    @PostMapping("/user/{id}")
+    @PostMapping("/user")
     @ApiOperation(value = "更新用户名")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "token", required = true, dataType = "String", paramType = "query"),
