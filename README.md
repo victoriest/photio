@@ -8,23 +8,15 @@ The complete file template is seem like below:
 
 ```bootstrap.yml```
 ```yml
-# 安全认证的配置
-security:
-  basic:
-    enabled: false
-  user:
-    name:
-    password: estest
-
 eureka:
   instance:
     hostname: localhost
     # 默认跳转链接
-    status-page-url: http://${spring.cloud.client.ip-address}:${server.port}/hello
+    status-page-url: http://${spring.cloud.client.ip-address}:${server.port}/swagger-ui.html
   client:
     serviceUrl:
       defaultZone: http://your_erueka_server_host:port/eureka/
-#      defaultZone: http://${security.user.name}:${security.user.password}@localhost:8090/eureka/
+#      defaultZone: http://${photio.security.user.name}:${photio.security.user.password}@${eureka.instance.hostname}:${server.port}/eureka/
 
 # 需要指明spring.application.name
 # 这个很重要，这在以后的服务与服务之间相互调用一般都是根据这个name
@@ -88,6 +80,12 @@ token:
   rsa-encrypt-enabled: true
 
 photio:
+
+  security:
+    user:
+      name: name
+      password: pwd
+
   snow-flake:
     original-timestamp: 1480166465631L
     data-center-id: 1

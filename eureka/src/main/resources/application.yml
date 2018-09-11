@@ -2,6 +2,14 @@ server:
   port: 8090
 
 spring:
+  # 安全认证的配置, 必须要配置为spring子项
+  security:
+    basic:
+      enabled: true
+    user:
+      name: ${photio.security.user.name}
+      password: ${photio.security.user.password}
+
   application:
     name: eureka
 # 通过
@@ -10,25 +18,31 @@ spring:
 # 来表明自己是一个eureka server
 eureka:
   instance:
-    hostname: spring-cloud.victoriest.me
-#    prefer-ip-address: true
+    hostname: localhost
+    prefer-ip-address: true
   client:
     # 由于该应用为注册中心，所以设置为false，代表不向注册中心注册自己
     registerWithEureka: false
     # 由于注册中心的职责就是维护服务实例，他并不需要去检索服务，所以也设置为false
     fetchRegistry: false
     serviceUrl:
-      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+      defaultZone: http://${photio.security.user.name}:${photio.security.user.password}@${eureka.instance.hostname}:${server.port}/eureka/
     server:
       # 自我保护模式是一种应对网络异常的安全保护措施。
       # 它的架构哲学是宁可同时保留所有微服务（健康的微服务和不健康的微服务都会保留），
       # 也不盲目注销任何健康的微服务。使用自我保护模式，可以让Eureka集群更加的健壮、稳定。
       enable-self-preservation: false
 
-# 安全认证的配置
-security:
-  basic:
-    enabled: false
-  user:
-    name: victoriest
-    password: estest
+---
+spring:
+  profiles: eureka01
+server:
+  port: 8090
+
+---
+spring:
+  profiles: eureka02
+server:
+  port: 8091
+
+# 通过启动参数 java -jar eureka.jar --spring.profiles.active=peer1 来确定启动的是哪个实例
