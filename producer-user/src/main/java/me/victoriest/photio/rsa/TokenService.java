@@ -4,6 +4,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import me.victoriest.photio.cache.CacheKey;
 import me.victoriest.photio.config.TokenConfig;
+import me.victoriest.photio.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -53,10 +54,10 @@ public class TokenService {
      * 生成Token
      * change log:1.1.1版本将原来使用的token和account的绑定改为和userId绑定，因为account值在修改手机号后会改变
      *
-     * @param account 当前登录成功的用户
+     * @param user 当前登录成功的用户
      * @return 返回token相关信息
      */
-    public Map<String, Object> createToken(String account) {
+    public Map<String, Object> createToken(User user) {
         // 生成一个token
         String token = UUID.randomUUID().toString();
 
@@ -71,21 +72,22 @@ public class TokenService {
         String key = CacheKey.TOKEN_KEY_PREFIX + token;
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("token", token);
-        map.put("account", account);
+        map.put("id", user.getId());
+        map.put("account", user.getAccount());
         map.put("expireTime", expireTime.getTime());
 
         // 将token信息写入到redis
         redisTemplate.opsForValue().set(key, map);
 
         // 将account对应的token保存起来，实现唯一设备登录功能
-        redisTemplate.opsForValue().set(account, token);
+        redisTemplate.opsForValue().set(user.getAccount(), token);
 
         Optional<String> accountLastLoginToken = Optional.ofNullable(
-                (String) redisTemplate.opsForValue().get(account));
+                (String) redisTemplate.opsForValue().get(user.getAccount()));
         if (accountLastLoginToken.isPresent()) {
             String accountTokenKey = CacheKey.TOKEN_KEY_PREFIX + accountLastLoginToken.get();
             redisTemplate.delete(accountTokenKey);
-            redisTemplate.delete(account);
+            redisTemplate.delete(user.getAccount());
         }
 
         return map;

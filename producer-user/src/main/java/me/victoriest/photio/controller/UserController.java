@@ -144,7 +144,7 @@ public class UserController {
             }
 
             // 生成token
-            Map<String, Object> tokenInfo = tokenService.createToken(account);
+            Map<String, Object> tokenInfo = tokenService.createToken(user);
 
             return new ResponseDto<>().success(tokenInfo);
         } else {

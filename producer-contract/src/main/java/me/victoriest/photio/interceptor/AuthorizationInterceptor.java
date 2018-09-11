@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  * @date 2018/3/28
  * spring-cloud-step-by-step
  */
-@Component
+//@Component
 public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
