@@ -1,6 +1,7 @@
 package me.victoriest.photio.config;
 
 import me.victoriest.photio.AuthorizationInterceptor;
+import me.victoriest.photio.LoginUserHandlerMethodArgumentResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -8,10 +9,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+
+import java.util.List;
 
 /**
  *
@@ -29,12 +33,20 @@ public class AppConfig extends WebMvcConfigurationSupport {
 
 //    @Autowired
 //    private AuthorizationInterceptor authorizationInterceptor;
-
+//
 //    @Override
 //    public void addInterceptors(InterceptorRegistry registry) {
 //        registry.addInterceptor(authorizationInterceptor)
 //                .addPathPatterns("/v1/api/**");
 //    }
+
+    @Autowired
+    private LoginUserHandlerMethodArgumentResolver myHandlerMethodArgumentResolver;
+
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+        argumentResolvers.add(myHandlerMethodArgumentResolver);
+    }
 
     @Bean
     @LoadBalanced
