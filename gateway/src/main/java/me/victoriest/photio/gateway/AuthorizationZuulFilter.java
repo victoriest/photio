@@ -2,13 +2,14 @@ package me.victoriest.photio.gateway;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
+import com.netflix.zuul.exception.ZuulException;
 import me.victoriest.photio.exception.BusinessLogicException;
 import me.victoriest.photio.gateway.service.feign.UserFeignClient;
 import me.victoriest.photio.message.Messages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.netflix.zuul.util.ZuulRuntimeException;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class AuthorizationZuulFilter extends ZuulFilter {
 
-    private String[] ignoreFilteUrls = new String[] {
+    private String[] ignoreFilterUrls = new String[] {
             "/producer-user/v1/api/login",
             "/producer-user/v1/api/registry",
             "/producer-user/v1/api/getRsaKey",
@@ -35,9 +36,6 @@ public class AuthorizationZuulFilter extends ZuulFilter {
 
     @Autowired
     private UserFeignClient userFeignClient;
-
-    @Value("${token.enable}")
-    private boolean enableToken;
 
     @Override
     public String filterType() {
@@ -59,7 +57,7 @@ public class AuthorizationZuulFilter extends ZuulFilter {
     public boolean shouldFilter() {
         RequestContext context = RequestContext.getCurrentContext();
         String uri = context.getRequest().getRequestURI();
-        for (String s : ignoreFilteUrls) {
+        for (String s : ignoreFilterUrls) {
             if (uri.contains(s)) {
                 return false;
             }
@@ -68,7 +66,7 @@ public class AuthorizationZuulFilter extends ZuulFilter {
     }
 
     @Override
-    public Object run() {
+    public Object run() throws ZuulException {
         // 滤器的具体逻辑。可用很复杂，包括查sql，nosql去判断该请求到底有没有权限访问
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
@@ -78,13 +76,13 @@ public class AuthorizationZuulFilter extends ZuulFilter {
             accessToken = request.getParameter("token");
         }
         if(accessToken == null) {
-            throw new BusinessLogicException(Messages.TOKEN_REQUIRED);
+            throw new ZuulException(new BusinessLogicException(Messages.TOKEN_REQUIRED), 200, "");
         }
 
         String token = accessToken.toString();
 
         if(userFeignClient.verifyToken(token).getState() != 0) {
-            throw new BusinessLogicException(Messages.TOKEN_INVALID);
+            throw new ZuulException(new BusinessLogicException(Messages.TOKEN_INVALID), 200, "");
         }
 
         return null;
