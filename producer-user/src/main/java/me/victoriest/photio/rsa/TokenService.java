@@ -143,9 +143,9 @@ public class TokenService {
         if (!tokenInfo.get().containsKey("expireTime")) {
             return false;
         }
-        Date expireTime = (Date) tokenInfo.get().get("expireTime");
+        Long expireTime = (Long) tokenInfo.get().get("expireTime");
 
-        return expireTime.after(now);
+        return now.getTime() < expireTime;
     }
 
     /**

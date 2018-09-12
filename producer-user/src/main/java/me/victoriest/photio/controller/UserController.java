@@ -60,8 +60,11 @@ public class UserController {
     public ResponseDto registry(@RequestParam String account,
                                 @RequestParam String name,
                                 @RequestParam Integer userType) {
-        Long id = userService.registryUser(account, name, userType).get();
-        return new ResponseDto<>().success(id);
+        Optional<Long> opt= userService.registryUser(account, name, userType);
+        if(opt.isPresent()) {
+            return new ResponseDto<>().success(opt.get());
+        }
+        throw new BusinessLogicException(Messages.INTERNAL_SERVER_ERROR);
     }
 
     @ApiOperation(value = "获取rsa公钥")
@@ -92,7 +95,10 @@ public class UserController {
         json.put("password", pwd);
         String result = "";
         try {
-            result = rsaKeyService.encrypt(rsaKeyId, json.toJSONString()).get();
+            Optional<String> opt = rsaKeyService.encrypt(rsaKeyId, json.toJSONString());
+            if(opt.isPresent()){
+                result = opt.get();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -151,12 +157,12 @@ public class UserController {
     @HystrixCommand
     public ResponseDto verifyToken(@RequestParam String token) {
         if (tokenService.verifyToken(token)) {
-            return new ResponseDto().success("");
+            return new ResponseDto().success();
         }
         throw new BusinessLogicException(Messages.TOKEN_INVALID);
     }
 
-    @PostMapping("/user/{id}/change-pwd")
+    @PostMapping("/user/change-pwd")
     @ApiOperation(value = "更新用户密码")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "token", required = true, dataType = "String", paramType = "query"),
@@ -169,7 +175,6 @@ public class UserController {
                                       @RequestParam String rsaKeyId,
                                       @RequestParam String oldPwd,
                                       @RequestParam String newPwd) {
-        // TODO using rsa to encrypt oldPwd and newPwd
         boolean result = userService.changePassword(user.getId(), rsaKeyId, oldPwd, newPwd);
         return result ? new ResponseDto().success() : new ResponseDto().fail("");
     }
