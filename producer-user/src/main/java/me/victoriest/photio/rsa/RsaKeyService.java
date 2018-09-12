@@ -2,12 +2,12 @@ package me.victoriest.photio.rsa;
 
 
 import com.alibaba.fastjson.JSON;
+import me.victoriest.photio.cache.RedisCache;
 import me.victoriest.photio.model.rsa.EncryptedRequest;
 import me.victoriest.photio.model.rsa.RSAPrivateKey;
 import me.victoriest.photio.model.rsa.RSAPubKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 
@@ -16,7 +16,6 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author VictoriEST
@@ -27,12 +26,14 @@ public class RsaKeyService {
     @Value("${token.rsa-encrypt-enabled}")
     private boolean rsaEncryptEnabled;
 
+    @Value("${token.rsa-expire-time-seconds}")
+    private Integer rsaExpireTime;
 
     private ConcurrentHashMap<String, RSAPrivateKey> keyStore = new ConcurrentHashMap<>();
 
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
-    private final long redisTimeOutSeconds = 900;
+    RedisCache redisCache;
+
     private final String KEY_PREFIX = "RSA_KEY_ID_";
 
     public RSAPubKey getKey() throws NoSuchAlgorithmException {
@@ -40,7 +41,7 @@ public class RsaKeyService {
         keyStore.put(privateKey.getId(), privateKey);
         try {
             // 同时写入redis缓存(避免这种特殊情况出现异常：用户获取到publicKey后，服务器突然重启了)
-            redisTemplate.opsForValue().set(KEY_PREFIX + privateKey.getId(), privateKey, redisTimeOutSeconds, TimeUnit.SECONDS);
+            redisCache.getValueOps().setWithExpire(KEY_PREFIX + privateKey.getId(), privateKey, rsaExpireTime);
         } catch (JedisConnectionException ex) {
             // Could not get a resource from the pool
             // 捕获redis连接不上异常，写入redis失败，不影响业务流程
@@ -55,7 +56,7 @@ public class RsaKeyService {
         RSAPrivateKey key = keyStore.get(request.getKeyId());
         if (key == null) {
             // 从缓存中获取
-            key = (RSAPrivateKey) redisTemplate.opsForValue().get(KEY_PREFIX + request.getKeyId());
+            key = (RSAPrivateKey) redisCache.getValueOps().get(KEY_PREFIX + request.getKeyId());
         }
         if (key != null) {
             PrivateKey privateKey = RSA.generateRSAPrivateKey(key);
@@ -81,7 +82,7 @@ public class RsaKeyService {
         RSAPrivateKey key = keyStore.get(keyId);
         if (key == null) {
             // 从缓存中获取
-            key = (RSAPrivateKey) redisTemplate.opsForValue().get(KEY_PREFIX + keyId);
+            key = (RSAPrivateKey) redisCache.getValueOps().get(KEY_PREFIX + keyId);
         }
         if (key != null) {
             PrivateKey privateKey = RSA.generateRSAPrivateKey(key);
@@ -95,7 +96,7 @@ public class RsaKeyService {
         RSAPrivateKey key = keyStore.get(keyId);
         if (key == null) {
             // 从缓存中获取
-            key = (RSAPrivateKey) redisTemplate.opsForValue().get(KEY_PREFIX + keyId);
+            key = (RSAPrivateKey) redisCache.getValueOps().get(KEY_PREFIX + keyId);
         }
         if (key != null) {
             PublicKey publicKey = RSA.generateRSAPublicKey(key);
@@ -117,9 +118,9 @@ public class RsaKeyService {
         }
 
         // 缓存也清除
-        RSAPrivateKey cacheObj = (RSAPrivateKey) redisTemplate.opsForValue().get(KEY_PREFIX + keyId);
+        RSAPrivateKey cacheObj = (RSAPrivateKey) redisCache.getValueOps().get(KEY_PREFIX + keyId);
         if (null != cacheObj) {
-            redisTemplate.delete(KEY_PREFIX + keyId);
+            redisCache.getValueOps().getOperations().delete(KEY_PREFIX + keyId);
         }
     }
 

@@ -72,6 +72,7 @@ mybatis:
   mapper-locations: mapper/**/*.xml
 
 token:
+  rsa-expire-time-seconds: 900
   #移动端token失效时间，单位为秒
   expire-time-seconds: 43200
   #是否开启模拟token值

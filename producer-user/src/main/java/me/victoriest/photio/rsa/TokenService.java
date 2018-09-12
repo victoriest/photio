@@ -3,10 +3,10 @@ package me.victoriest.photio.rsa;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import me.victoriest.photio.cache.CacheKey;
+import me.victoriest.photio.cache.RedisCache;
 import me.victoriest.photio.config.TokenConfig;
 import me.victoriest.photio.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -16,6 +16,7 @@ import java.util.*;
 
 /**
  * 用户Token
+ *
  * @author VictoriEST
  */
 @Service
@@ -25,10 +26,11 @@ public class TokenService {
     private TokenConfig tokenSettings;
 
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private RedisCache redisCache;
 
     /**
      * JWT方式生成token
+     *
      * @param account
      * @return
      */
@@ -52,12 +54,21 @@ public class TokenService {
 
     /**
      * 生成Token
-     * change log:1.1.1版本将原来使用的token和account的绑定改为和userId绑定，因为account值在修改手机号后会改变
      *
      * @param user 当前登录成功的用户
      * @return 返回token相关信息
      */
     public Map<String, Object> createToken(User user) {
+
+        // clear old token info in cache
+        Optional<String> accountLastLoginToken = Optional.ofNullable(
+                (String) redisCache.getValueOps().get(user.getAccount()));
+        if (accountLastLoginToken.isPresent()) {
+            String accountTokenKey = CacheKey.TOKEN_KEY_PREFIX + accountLastLoginToken.get();
+            redisCache.getValueOps().getOperations().delete(accountTokenKey);
+            redisCache.getValueOps().getOperations().delete(user.getAccount());
+        }
+
         // 生成一个token
         String token = UUID.randomUUID().toString();
 
@@ -77,18 +88,11 @@ public class TokenService {
         map.put("expireTime", expireTime.getTime());
 
         // 将token信息写入到redis
-        redisTemplate.opsForValue().set(key, map);
+        redisCache.getValueOps().setWithExpire(key, map, tokenSettings.getTokenExpirseSecsonds());
 
         // 将account对应的token保存起来，实现唯一设备登录功能
-        redisTemplate.opsForValue().set(user.getAccount(), token);
+        redisCache.getValueOps().setWithExpire(user.getAccount(), token, tokenSettings.getTokenExpirseSecsonds());
 
-        Optional<String> accountLastLoginToken = Optional.ofNullable(
-                (String) redisTemplate.opsForValue().get(user.getAccount()));
-        if (accountLastLoginToken.isPresent()) {
-            String accountTokenKey = CacheKey.TOKEN_KEY_PREFIX + accountLastLoginToken.get();
-            redisTemplate.delete(accountTokenKey);
-            redisTemplate.delete(user.getAccount());
-        }
 
         return map;
     }
@@ -102,25 +106,27 @@ public class TokenService {
      */
     public Optional<Map<String, Object>> getTokenInfo(String token) {
         String key = CacheKey.TOKEN_KEY_PREFIX + token;
-        return Optional.ofNullable((Map<String, Object>) redisTemplate.opsForValue().get(key));
+        return Optional.ofNullable((Map<String, Object>) redisCache.getValueOps().get(key));
     }
 
     /**
      * 获取用户最后一次登录获取的token
+     *
      * @return
      */
     public Optional<String> getUserLastLoginToken(String account) {
-        return Optional.ofNullable((String) redisTemplate.opsForValue().get(account));
+        return Optional.ofNullable((String) redisCache.getValueOps().get(account));
     }
 
     /**
      * 验证token是否合法
+     *
      * @param token
      * @return
      */
     public boolean verifyToken(String token) {
         Optional<Map<String, Object>> tokenInfo = getTokenInfo(token);
-        if(!tokenInfo.isPresent()) {
+        if (!tokenInfo.isPresent()) {
             return false;
         }
         Map<String, Object> map = tokenInfo.get();
@@ -134,12 +140,12 @@ public class TokenService {
             }
         }
         Date now = new Date();
-        if(!tokenInfo.get().containsKey("expireTime")) {
+        if (!tokenInfo.get().containsKey("expireTime")) {
             return false;
         }
         Date expireTime = (Date) tokenInfo.get().get("expireTime");
 
-        return expireTime.after(now) ? true : false;
+        return expireTime.after(now);
     }
 
     /**
@@ -150,8 +156,8 @@ public class TokenService {
 
         if (userLastLoginToken.isPresent()) {
             String key = CacheKey.TOKEN_KEY_PREFIX + userLastLoginToken.get();
-            redisTemplate.delete(key);
-            redisTemplate.delete(account);
+            redisCache.getValueOps().getOperations().delete(key);
+            redisCache.getValueOps().getOperations().delete(account);
         }
     }
 
