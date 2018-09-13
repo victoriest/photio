@@ -1,4 +1,4 @@
-package me.victoriest.photio;
+package me.victoriest.photio.aop;
 
 import me.victoriest.photio.annotation.LoginUser;
 import me.victoriest.photio.cache.CacheKey;

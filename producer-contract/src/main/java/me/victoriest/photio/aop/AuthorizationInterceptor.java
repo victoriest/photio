@@ -1,4 +1,4 @@
-package me.victoriest.photio.interceptor;
+package me.victoriest.photio.aop;
 
 import me.victoriest.photio.exception.BusinessLogicException;
 import me.victoriest.photio.message.Messages;
