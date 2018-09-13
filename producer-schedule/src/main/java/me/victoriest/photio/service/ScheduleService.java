@@ -58,6 +58,8 @@ public class ScheduleService {
 
         schedule.setCreatorId(userId);
         schedule.setCreateDate(date);
+        schedule.setUpdaterId(userId);
+        schedule.setUpdateDate(date);
 
         scheduleMapper.insert(schedule);
 
@@ -70,8 +72,13 @@ public class ScheduleService {
         schedule.setIsScheduled(1);
         schedule.setUpdaterId(userId);
         schedule.setUpdateDate(new Date());
+        // 只能更新本人的schedule state
+        ScheduleExample example = new ScheduleExample();
+        ScheduleExample.Criteria criteria = example.createCriteria();
+        criteria.andUserIdEqualTo(userId);
+        criteria.andIdEqualTo(scheduleId);
+        int result = scheduleMapper.updateByExampleSelective(schedule, example);
 
-        int result = scheduleMapper.updateByPrimaryKeySelective(schedule);
         return result > 0;
     }
 
@@ -83,7 +90,10 @@ public class ScheduleService {
         User user = userFeignClient.getById(userId).getData();
         ScheduleExample example = new ScheduleExample();
 
+        // TODO search the user type is different to the user
+        // TODO SEARCH THE TAGS
         ScheduleExample.Criteria criteria = example.createCriteria();
+        criteria.andIsScheduledLessThan(1);
         if(beginDate != null && endDate != null) {
             criteria.andCreateDateBetween(beginDate, endDate);
         }

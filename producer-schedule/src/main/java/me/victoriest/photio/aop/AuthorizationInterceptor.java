@@ -1,4 +1,4 @@
-package me.victoriest.photio.interceptor;
+package me.victoriest.photio.aop;
 
 import me.victoriest.photio.exception.BusinessLogicException;
 import me.victoriest.photio.message.Messages;
@@ -8,7 +8,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +19,6 @@ import javax.servlet.http.HttpServletResponse;
  * @date 2018/3/28
  * spring-cloud-step-by-step
  */
-//@Component
 public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
