@@ -42,7 +42,7 @@ public class ContractController {
             @ApiImplicitParam(name = "targetUserId", value = "被邀请用户ID", required = true, dataType = "long")
     })
     @PutMapping("invitation/invite")
-    @HystrixCommand(fallbackMethod = "inviteFallback")
+    @HystrixCommand
     public ResponseDto invite(@ApiIgnore @LoginUser User user,
                               @RequestParam String token,
                               @RequestParam Long scheduleId,
@@ -51,11 +51,6 @@ public class ContractController {
         return new ResponseDto().success(result.get());
     }
 
-    public ResponseDto inviteFallback(String token,
-                                      Long scheduleId,
-                                      Long targetUserId) {
-        return new ResponseDto<>().fail("fallback");
-    }
 
     @ApiOperation(value = "接受邀请")
     @ApiImplicitParams({
@@ -63,17 +58,12 @@ public class ContractController {
             @ApiImplicitParam(name = "invitationId", value = "接受邀请的id", required = true, dataType = "long")
     })
     @PutMapping("invitation/accept")
-    @HystrixCommand(fallbackMethod = "acceptInvitationFallback")
+    @HystrixCommand
     public ResponseDto acceptInvitation(@ApiIgnore @LoginUser User user,
                                         @RequestParam String token,
                                         @RequestParam Long invitationId) {
-        boolean result = contractService.updateInvitationState(user.getId(), invitationId, 1);
+        boolean result = contractService.updateInvitationState(token, user.getId(), invitationId, 1);
         return result ? new ResponseDto().success() : new ResponseDto().fail("");
-    }
-
-    public ResponseDto acceptInvitationFallback(String token,
-                                                Long invitationId) {
-        return new ResponseDto<>().fail("fallback");
     }
 
     @ApiOperation(value = "拒绝邀请")
@@ -82,17 +72,12 @@ public class ContractController {
             @ApiImplicitParam(name = "invitationId", value = "拒绝邀请的id", required = true, dataType = "long")
     })
     @PutMapping("invitation/reject")
-    @HystrixCommand(fallbackMethod = "rejectInvitationFallback")
+    @HystrixCommand
     public ResponseDto rejectInvitation(@ApiIgnore @LoginUser User user,
                                         @RequestParam String token,
                                         @RequestParam Long invitationId) {
-        boolean result = contractService.updateInvitationState(user.getId(), invitationId, 4);
+        boolean result = contractService.updateInvitationState(token, user.getId(), invitationId, 4);
         return result ? new ResponseDto().success() : new ResponseDto().fail("");
-    }
-
-    public ResponseDto rejectInvitationFallback(String token,
-                                                Long invitationId) {
-        return new ResponseDto<>().fail("fallback");
     }
 
     @ApiOperation(value = "评价")
@@ -103,21 +88,13 @@ public class ContractController {
             @ApiImplicitParam(name = "message", value = "评语", required = true, dataType = "String")
     })
     @PutMapping("invitation/evaluate")
-    @HystrixCommand(fallbackMethod = "evaluateFallback")
-
+    @HystrixCommand
     public ResponseDto evaluate(@ApiIgnore @LoginUser User user,@RequestParam String token,
                                 @RequestParam Long targetUserId,
                                 @RequestParam int score,
                                 @RequestParam String message) {
         Optional<Long> result = contractService.evaluate(user.getId(), targetUserId, score, message);
         return new ResponseDto().success(result.get());
-    }
-
-    public ResponseDto evaluateFallback(String token,
-                                        Long targetUserId,
-                                        int score,
-                                        String message) {
-        return new ResponseDto<>().fail("fallback");
     }
 
 

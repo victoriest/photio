@@ -35,12 +35,11 @@ public class ScheduleController {
 
     @ApiOperation(value = "根据指定id获取日程")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "token", value = "token", required = true, dataType = "String"),
             @ApiImplicitParam(name = "id", value = "schedule id", required = true, dataType = "long")
     })
     @GetMapping("/schedule/{id}")
     @HystrixCommand
-    public ResponseDto<Schedule> getSchedule(@RequestParam String token, @PathVariable Long id) {
+    public ResponseDto<Schedule> getSchedule(@PathVariable Long id) {
         Schedule result = scheduleService.getSchedule(id).get();
         return new ResponseDto<Schedule>().success(result);
     }

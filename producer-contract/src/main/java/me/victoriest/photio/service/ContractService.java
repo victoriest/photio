@@ -69,13 +69,13 @@ public class ContractService {
         return Optional.of(id);
     }
 
-    public boolean updateInvitationState(Long userId, Long invitationId, int state) {
+    public boolean updateInvitationState(String token, Long userId, Long invitationId, int state) {
 
         // if the invitation has been accepted, then update the state of schedule
         // TODO there is a distributed transaction problem
         if(state == 1) {
             Invitation invit = invitationMapper.selectByPrimaryKey(invitationId);
-            scheduleFeignClient.scheduledTheSchedule(userId, invit.getTargetScheduleId());
+            scheduleFeignClient.scheduledTheSchedule(token, invit.getTargetScheduleId());
         }
 
         InvitationExample example = new InvitationExample();
@@ -92,7 +92,6 @@ public class ContractService {
                                    Long targetUserId,
                                    int score,
                                    String message) {
-        // TODO check if the scheduled date is early then date now
         Long id = snowFlakeIdGenerator.nextId();
         Date now = new Date();
         Evaluation evaluation = new Evaluation();

@@ -20,7 +20,8 @@ public class ScheduleFeignHystrix implements ScheduleFeignClient {
     }
 
     @Override
-    public ResponseDto scheduledTheSchedule(Long userId, Long scheduleId) {
+    public ResponseDto scheduledTheSchedule(String token, Long scheduleId) {
         return new ResponseDto<Schedule>().fail("error hystrix when scheduledTheSchedule");
     }
+
 }

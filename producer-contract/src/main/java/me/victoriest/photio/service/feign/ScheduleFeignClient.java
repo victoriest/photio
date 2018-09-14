@@ -23,7 +23,7 @@ public interface ScheduleFeignClient {
     ResponseDto<Schedule> getScheduleById(@PathVariable(value = "id") Long id);
 
     @RequestMapping(value = "v1/api/scheduled", method = RequestMethod.GET)
-    ResponseDto scheduledTheSchedule(@RequestParam Long userId,
+    ResponseDto scheduledTheSchedule(@RequestParam String token,
                                      @RequestParam Long scheduleId);
 
 }
