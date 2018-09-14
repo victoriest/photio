@@ -41,7 +41,7 @@ public class ScheduleService {
 
     public Optional<Schedule> getSchedule(Long scheduleId) {
         Schedule schedule = scheduleMapper.selectByPrimaryKey(scheduleId);
-        return Optional.of(schedule);
+        return Optional.ofNullable(schedule);
     }
 
     public Optional<Long> createSchedule(Long userId,
@@ -63,7 +63,7 @@ public class ScheduleService {
 
         scheduleMapper.insert(schedule);
 
-        return Optional.of(id);
+        return Optional.ofNullable(id);
     }
 
     public boolean scheduledTheSchedule(Long userId, Long scheduleId) {
