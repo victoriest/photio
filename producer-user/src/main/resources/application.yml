@@ -15,4 +15,4 @@ management:
     web:
       base-path: /
       exposure:
-        include: hystrix.stream
+        include: hystrix.stream, health

@@ -21,6 +21,13 @@ eureka:
 # 需要指明spring.application.name
 # 这个很重要，这在以后的服务与服务之间相互调用一般都是根据这个name
 spring:
+  cloud:
+    consul:
+      discovery:
+        serviceName: ${spring.application.name}
+        healthCheckPath: /health
+      host: localhost
+      port: 8500
   zipkin:
     base-url: http://your_zipin_server＿host:port
   sleuth:
